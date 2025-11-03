@@ -1,0 +1,29 @@
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
+
+const PostDetail = () => {
+  const { id } = useParams();
+  const [post, setPost] = useState(null);
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState('');
+  const token = localStorage.getItem('token');
+
+  useEffect(() => {
+    const fetchPost = async () => {
+      const response = await axios.get(`http://localhost:5000/api/posts/${id}`);
+      setPost(response.data.post);
+      setComments(response.data.comments);
+    };
+    fetchPost();
+  }, [id]);
+
+  const handleCommentSubmit = async (e) => {
+    e.preventDefault();
+    const response = await axios.post('http://localhost:5000/api/comments', {
+      text: newComment,
+      postId: id,
+    }, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    set
